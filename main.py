@@ -37,6 +37,7 @@ def main():
     new_game.deal_turn()
     new_game.deal_river()
     new_game.print_round_info()
+    new_game.score_all()
 
 
 """

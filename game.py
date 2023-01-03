@@ -251,3 +251,8 @@ class Game(object):
                 [score1, score2, score3, score4, score5, score6, score7, score8])
         best_score = max(list_of_all_score_possibilities)
         player.score = best_score
+
+    def score_all(self):
+        for player in self.list_of_players_not_out:
+            self.hand_scorer(player)
+            print(f"Player {player.name} has a score of: {player.score}")
