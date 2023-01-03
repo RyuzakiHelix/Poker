@@ -7,13 +7,19 @@ class StandardDeck(list):
         super().__init__()
         suits = list(range(4))
         values = list(range(13))
-        [[self.append(Card(i, j)) for j in suits] for i in values]
+       # [[self.append(Card(value, suit)) for suit in suits] for value in values]
+        for value in values:
+            for suit in suits:
+                self.append(Card(value, suit))
 
     def shuffle(self):
         random.shuffle(self)
         print("\n\n--deck shuffled--")
 
-    def deal(self, times=1):
+    def deal(self, player, times=1):
         for i in range(times):
-            # location.cards.append(self.pop(0))
-            print(self.pop(0))
+            player.cards.append(self.pop(0))
+           # print(self.pop(0))
+
+    def burn(self):
+        self.pop(0)
