@@ -4,6 +4,10 @@ from deck import StandardDeck
 from player import Player
 from game import Game
 from rules import find_winners, score_all
+from agents import AgentPlayerOne, PrviAgent, TestAgent
+import agents
+import spade
+import time
 
 
 def main():
@@ -20,6 +24,9 @@ def main():
     player4 = Player("Matej")
     player5 = Player("Ivana")
     players = [player1, player2, player3, player4]
+
+    a = AgentPlayerOne("posiljatelj@rec.foi.hr", "tajna")
+    a.start()
 
    # deck.deal(player1)
    # print(player1.cards)
@@ -83,4 +90,20 @@ def main():
 """
 
 if __name__ == "__main__":
-    main()
+    # main()
+    # a = AgentPlayerOne("test090498@01337.io", "test090498")
+    # a = AgentPlayerOne("test0904@shad0w.io", "test0904")
+    # a = AgentPlayerOne("test090498@jabber.hot-chilli.net", "test090498")
+    # a = PrviAgent("test090498@jabber.hot-chilli.net", "test090498")
+    a = TestAgent("test090498@jabber.hot-chilli.net", "test090498")
+    a.start()
+    # future = a.start()
+    # future.result()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nZaustavljam agenta...")
+
+    a.stop()
+    spade.quit_spade()
