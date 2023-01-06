@@ -1,7 +1,9 @@
 from spade.agent import Agent
 from spade.behaviour import CyclicBehaviour, PeriodicBehaviour
 from player import Player
+from game import Game
 import asyncio
+import spade
 
 
 class AgentPlayerOne(Agent):
@@ -25,18 +27,72 @@ class PrviAgent(Agent):
         print("PrviAgent: Pokrecem se!")
 
 
-class TestAgent(Agent):
+class DealerAgent(Agent):
+    def __init__(self, *xmpp, player, newgame):
+        super().__init__(*xmpp)
+        self.dealer = Player()
+        self.dealer = player
+        # self.game = Game()
+        self.game = newgame
+
     class MyBehav(CyclicBehaviour):
         async def on_start(self):
-            print("Starting behaviour . . .")
-            self.counter = 0
+            print("Game starting . . .")
+            self.agent.game.deal_hole()
+            self.agent.game.print_round_info()
+
+            self.counter = 1
 
         async def run(self):
-            print("Counter: {}".format(self.counter))
+            print("Round: {}".format(self.counter))
+            # self.agent.game.act_one()
+            self.agent.game.print_round_info()
             self.counter += 1
+            # This is weird, it works but vsc doesnt register it as right
+            # print(self.agent.dealer.name)
+            msg = spade.message.Message(
+                to="test0904@jabber.hot-chilli.net",
+                body="Želiš li igrati?")
+            await self.send(msg)
+            msgD = await self.receive(timeout=20)
+            print(f"{msgD.sender} šalje poruku: {msgD.body}")
+            if (msgD.body == "Da želim igrati!"):
+                print("We are here he sent the corrent response")
+
             await asyncio.sleep(1)
 
     async def setup(self):
-        print("Agent starting . . .")
+        print(
+            f"I am your dealer: {self.dealer.name} and i have so many chips: {self.dealer.chips}")
+        b = self.MyBehav()
+        self.add_behaviour(b)
+
+
+class PlayerAgent(Agent):
+    def __init__(self, *xmpp, player, newgame):
+        super().__init__(*xmpp)
+        self.player = Player()
+        self.player = player
+        # self.game = Game()
+        self.game = newgame
+
+    class MyBehav(CyclicBehaviour):
+        async def on_start(self):
+            print("Game starting . . .")
+
+        async def run(self):
+            print("I am running")
+            msgD = await self.receive(timeout=20)
+            if msgD:
+                print(f"{msgD.sender} šalje poruku: {msgD.body}")
+                msg = spade.message.Message(
+                    to=str(msgD.sender),
+                    body="Da želim igrati!")
+                await self.send(msg)
+            await asyncio.sleep(1)
+
+    async def setup(self):
+        print(
+            f"It is my call: {self.player.name} and i have so many chips: {self.player.chips}")
         b = self.MyBehav()
         self.add_behaviour(b)

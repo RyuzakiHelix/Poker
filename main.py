@@ -4,7 +4,7 @@ from deck import StandardDeck
 from player import Player
 from game import Game
 from rules import find_winners, score_all
-from agents import AgentPlayerOne, PrviAgent, TestAgent
+from agents import AgentPlayerOne, PlayerAgent, DealerAgent
 import agents
 import spade
 import time
@@ -24,9 +24,6 @@ def main():
     player4 = Player("Matej")
     player5 = Player("Ivana")
     players = [player1, player2, player3, player4]
-
-    a = AgentPlayerOne("posiljatelj@rec.foi.hr", "tajna")
-    a.start()
 
    # deck.deal(player1)
    # print(player1.cards)
@@ -95,15 +92,41 @@ if __name__ == "__main__":
     # a = AgentPlayerOne("test0904@shad0w.io", "test0904")
     # a = AgentPlayerOne("test090498@jabber.hot-chilli.net", "test090498")
     # a = PrviAgent("test090498@jabber.hot-chilli.net", "test090498")
-    a = TestAgent("test090498@jabber.hot-chilli.net", "test090498")
-    a.start()
+    deck = StandardDeck()
+    deck.shuffle()
+    print(deck)
+    print(len(deck))
+    player1 = Player("Ivan")
+    player2 = Player("Marko")
+    player3 = Player("Luka")
+    player4 = Player("Matej")
+    player5 = Player("Ivana")
+    players = [player1, player2, player3, player4]
+    entrysc = 100
+    entrysb = 10
+    entrybb = 20
+    chip_entry_list = [entrysc, entrysb, entrybb]
+    new_game = Game(deck, players, chip_entry_list)
+    new_game.establish_player_attributes()
+    new_game.print_round_info()
+    print(new_game.dealer.name)
+
+    xmpp = ["test090498@jabber.hot-chilli.net", "test090498"]
+    xmpp1 = ["test0904@jabber.hot-chilli.net", "test0904"]
+    #a = TestAgent("test090498@jabber.hot-chilli.net", "test090498", player=player1)
+    test = PlayerAgent(xmpp1[0],xmpp1[1], player=new_game.acting_player, newgame=new_game)
+    test.start()
+    dealer = DealerAgent(xmpp[0],xmpp[1], player=new_game.dealer, newgame=new_game)
+    dealer.start()
+    
     # future = a.start()
     # future.result()
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nZaustavljam agenta...")
+        print("\nStopping agent...")
 
-    a.stop()
+    dealer.stop()
+    test.stop()
     spade.quit_spade()

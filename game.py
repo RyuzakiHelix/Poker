@@ -229,6 +229,7 @@ class Game(object):
             print(self.possible_responses)
             # response = str(ask_app(f"{player.name}'s action\n->", self))
             response = str(input(f"{player.name}'s action\n->"))
+            #Get agent response here!!!!!!!!!!
             if response not in self.possible_responses:
                 print("Invalid response")
                 continue
