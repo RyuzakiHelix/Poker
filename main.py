@@ -4,8 +4,8 @@ from deck import StandardDeck
 from player import Player
 from game import Game
 from rules import find_winners, score_all
-from agents import AgentPlayerOne, PlayerAgent, DealerAgent
-import agents
+from agents import PlayerAgent, DealerAgent
+from agents import *
 import spade
 import time
 
@@ -88,10 +88,6 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    # a = AgentPlayerOne("test090498@01337.io", "test090498")
-    # a = AgentPlayerOne("test0904@shad0w.io", "test0904")
-    # a = AgentPlayerOne("test090498@jabber.hot-chilli.net", "test090498")
-    # a = PrviAgent("test090498@jabber.hot-chilli.net", "test090498")
     deck = StandardDeck()
     deck.shuffle()
     print(deck)
@@ -109,16 +105,28 @@ if __name__ == "__main__":
     new_game = Game(deck, players, chip_entry_list)
     new_game.establish_player_attributes()
     new_game.print_round_info()
-    print(new_game.dealer.name)
-
+    new_game.act_one()
     xmpp = ["test090498@jabber.hot-chilli.net", "test090498"]
     xmpp1 = ["test0904@jabber.hot-chilli.net", "test0904"]
-    #a = TestAgent("test090498@jabber.hot-chilli.net", "test090498", player=player1)
-    test = PlayerAgent(xmpp1[0],xmpp1[1], player=new_game.acting_player, newgame=new_game)
-    test.start()
-    dealer = DealerAgent(xmpp[0],xmpp[1], player=new_game.dealer, newgame=new_game)
+    xmpp2 = ["test0409@jabber.hot-chilli.net", "test0409"]
+    xmpp3 = ["test040998@jabber.hot-chilli.net", "test040998"]
+    # a = TestAgent("test090498@jabber.hot-chilli.net", "test090498", player=player1)
+    agent1 = PlayerAgent(xmpp1[0], xmpp1[1],
+                         player=new_game.first_actor, newgame=new_game)
+    future1 = agent1.start()
+    future1.wait()
+    agent2 = PlayerAgent(xmpp2[0], xmpp2[1],
+                         player=new_game.small_blind, newgame=new_game)
+    future2 = agent2.start()
+    future2.wait()
+    agent3 = PlayerAgent(xmpp3[0], xmpp3[1],
+                         player=new_game.big_blind, newgame=new_game)
+    future3 = agent3.start()
+    future3.wait()
+    dealer = DealerAgent(
+        xmpp[0], xmpp[1], player=new_game.dealer, newgame=new_game)
     dealer.start()
-    
+
     # future = a.start()
     # future.result()
     try:
@@ -128,5 +136,7 @@ if __name__ == "__main__":
         print("\nStopping agent...")
 
     dealer.stop()
-    test.stop()
+    agent1.stop()
+    agent2.stop()
+    agent3.stop()
     spade.quit_spade()
