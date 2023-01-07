@@ -75,6 +75,9 @@ def main():
     # new_game.find_winners()
     find_winners(new_game)
 
+    new_game.round_ended = True
+    new_game.end_round()
+
 
 """
     for player in players:
@@ -88,6 +91,7 @@ def main():
 
 if __name__ == "__main__":
     # main()
+
     deck = StandardDeck()
     deck.shuffle()
     print(deck)

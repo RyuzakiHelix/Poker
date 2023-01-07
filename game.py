@@ -229,7 +229,7 @@ class Game(object):
             print(self.possible_responses)
             # response = str(ask_app(f"{player.name}'s action\n->", self))
             response = str(input(f"{player.name}'s action\n->"))
-            # Get agent response here!!!!!!!!!!
+            #Get agent response here!!!!!!!!!!
             if response not in self.possible_responses:
                 print("Invalid response")
                 continue
@@ -386,9 +386,9 @@ class Game(object):
             self.big_blind.stake += self.big_blind_amount
             self.highest_stake = self.big_blind_amount
             self.pot += self.big_blind_amount
-        # self.ask_players()
+        #self.ask_players()
 
-    def answer_agent(self, player, response):
+    def answer_agent(self, player,response):
         player.stake_gap = self.highest_stake - player.stake
         if player.all_in or player.fold or self.fold_out:
             return True
@@ -416,12 +416,10 @@ class Game(object):
             self.possible_responses.append("fold")
             self.possible_responses.append("all_in")
         while True:
-            print(self.possible_responses)
-            # response = str(ask_app(f"{player.name}'s action\n->", self))
-            # response = str(input(f"{player.name}'s action\n->"))
-            # Get agent response here!!!!!!!!!!
             if response not in self.possible_responses:
+                print(response)
                 print("Invalid response")
+                time.sleep(2)
                 continue
             if response == "all_in_partial":
                 player.stake += player.chips
@@ -533,7 +531,7 @@ class Game(object):
                 return True
             print("Invalid Response")
 
-    def ask_player_agent(self, response, wanted_player):
+    def ask_player_agent(self,response,wanted_player):
         """
         starting_index = self.list_of_players_not_out.index(self.first_actor)
         self.acting_player = self.list_of_players_not_out[starting_index]
@@ -544,12 +542,15 @@ class Game(object):
         self.answer_agent(self.list_of_players_not_out[starting_index],response)
         """
         for player in self.list_of_players_not_out:
-            if (wanted_player in player.list_of_special_attributes):
-                print(player.name)
+            if(wanted_player in player.list_of_special_attributes):
+                #print(player.name)
                 index = self.list_of_players_not_out.index(player)
-        self.answer_agent(self.list_of_players_not_out[index], response)
+        self.answer_agent(self.list_of_players_not_out[index],response)
+                
 
-    def act_one_agent(self, response):
+
+
+    def act_one_agent(self,response):
         if self.small_blind_amount > self.small_blind.chips:
             self.small_blind.stake += self.small_blind.chips
             self.highest_stake = self.small_blind.chips
@@ -575,6 +576,7 @@ class Game(object):
             self.highest_stake = self.big_blind_amount
             self.pot += self.big_blind_amount
         self.ask_player_agent(response)
+
 
 
 """
