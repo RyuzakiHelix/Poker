@@ -4,8 +4,8 @@ from deck import StandardDeck
 from player import Player
 from game import Game
 from rules import find_winners, score_all
-from agents import PlayerAgent, DealerAgent
-from agents import *
+from agents import DealerAgent
+from agent_player import PlayerAgent
 import spade
 import time
 
@@ -115,6 +115,7 @@ if __name__ == "__main__":
     xmpp2 = ["test0409@jabber.hot-chilli.net", "test0409"]
     xmpp3 = ["test040998@jabber.hot-chilli.net", "test040998"]
     # a = TestAgent("test090498@jabber.hot-chilli.net", "test090498", player=player1)
+
     agent1 = PlayerAgent(xmpp1[0], xmpp1[1],
                          player=new_game.first_actor, newgame=new_game)
     future1 = agent1.start()
@@ -127,9 +128,10 @@ if __name__ == "__main__":
                          player=new_game.big_blind, newgame=new_game)
     future3 = agent3.start()
     future3.wait()
-    dealer = DealerAgent(
+    future0 = dealer = DealerAgent(
         xmpp[0], xmpp[1], player=new_game.dealer, newgame=new_game)
-    dealer.start()
+    future0 = dealer.start()
+    future0.wait()
 
     # future = a.start()
     # future.result()

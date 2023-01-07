@@ -229,7 +229,7 @@ class Game(object):
             print(self.possible_responses)
             # response = str(ask_app(f"{player.name}'s action\n->", self))
             response = str(input(f"{player.name}'s action\n->"))
-            #Get agent response here!!!!!!!!!!
+            # Get agent response here!!!!!!!!!!
             if response not in self.possible_responses:
                 print("Invalid response")
                 continue
@@ -386,9 +386,12 @@ class Game(object):
             self.big_blind.stake += self.big_blind_amount
             self.highest_stake = self.big_blind_amount
             self.pot += self.big_blind_amount
-        #self.ask_players()
+        # self.ask_players()
 
-    def answer_agent(self, player,response):
+    def answer_agent(self, player, response, raise_value):
+        print(response)
+        print(raise_value)
+        time.sleep(3)
         player.stake_gap = self.highest_stake - player.stake
         if player.all_in or player.fold or self.fold_out:
             return True
@@ -462,9 +465,8 @@ class Game(object):
             if response == "raise":
                 self.need_raise_info = True
                 while True:
-                    bet = int(
-                        input(f"How much would {player.name} like to raise? ({player.chips} available)\n->",
-                              self))
+
+                    bet = int(raise_value)
                     if bet > player.chips or bet <= 0:
                         print("Invalid response")
                         continue
@@ -487,9 +489,8 @@ class Game(object):
                 player.stake_gap = 0
                 while True:
                     try:
-                        bet = int(
-                            input(f"How much would {player.name} like to raise? ({player.chips} available)\n->",
-                                  self))
+                        print("raised by ", raise_value)
+                        bet = int(raise_value)
                     except ValueError:
                         continue
                     if bet > player.chips or bet <= 0:
@@ -531,26 +532,16 @@ class Game(object):
                 return True
             print("Invalid Response")
 
-    def ask_player_agent(self,response,wanted_player):
-        """
-        starting_index = self.list_of_players_not_out.index(self.first_actor)
-        self.acting_player = self.list_of_players_not_out[starting_index]
-        #Dealer-3,First-2,BB-1,SB-0
+    def ask_player_agent(self, response, raise_value, wanted_player):
+
         for player in self.list_of_players_not_out:
-            print(player.name,self.list_of_players_not_out.index(player))
-        print(starting_index)
-        self.answer_agent(self.list_of_players_not_out[starting_index],response)
-        """
-        for player in self.list_of_players_not_out:
-            if(wanted_player in player.list_of_special_attributes):
-                #print(player.name)
+            if (wanted_player in player.list_of_special_attributes):
+                # print(player.name)
                 index = self.list_of_players_not_out.index(player)
-        self.answer_agent(self.list_of_players_not_out[index],response)
-                
+        self.answer_agent(
+            self.list_of_players_not_out[index], response, raise_value)
 
-
-
-    def act_one_agent(self,response):
+    def act_one_agent(self, response):
         if self.small_blind_amount > self.small_blind.chips:
             self.small_blind.stake += self.small_blind.chips
             self.highest_stake = self.small_blind.chips
@@ -576,40 +567,3 @@ class Game(object):
             self.highest_stake = self.big_blind_amount
             self.pot += self.big_blind_amount
         self.ask_player_agent(response)
-
-
-
-"""
-def score_interpreter(player):
-    list_of_hand_types = ["High Card", "One Pair", "Two Pair", "Three of a Kind", "Straight", "Flush",
-                          "Full House",
-                          "Four of a Kind", "Straight Flush", "Royal Flush"]
-    list_of_values_to_interpret = ["Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
-                                   "Jack",
-                                   "Queen",
-                                   "King", "Ace"]
-    hand_type = list_of_hand_types[player.score[0]]
-    mod1 = list_of_values_to_interpret[player.score[1]]
-    mod2 = list_of_values_to_interpret[player.score[2]]
-    mod3 = list_of_values_to_interpret[player.score[3]]
-    if player.score[0] == 0:
-        return hand_type + ": " + mod3
-    if player.score[0] == 1:
-        return hand_type + ": " + mod1 + "s"
-    if player.score[0] == 2:
-        return hand_type + ": " + mod1 + "s" + " and " + mod2 + "s"
-    if player.score[0] == 3:
-        return hand_type + ": " + mod1 + "s"
-    if player.score[0] == 4:
-        return hand_type + ": " + mod1 + " High"
-    if player.score[0] == 5:
-        return hand_type + ": " + mod1 + " High"
-    if player.score[0] == 6:
-        return hand_type + ": " + mod1 + "s" + " and " + mod2 + "s"
-    if player.score[0] == 7:
-        return hand_type + ": " + mod1 + "s"
-    if player.score[0] == 8:
-        return hand_type + ": " + mod1 + " High"
-    if player.score[0] == 9:
-        return hand_type
-"""
